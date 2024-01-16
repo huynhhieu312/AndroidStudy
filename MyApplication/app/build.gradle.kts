@@ -54,13 +54,17 @@ dependencies {
 //    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+
     //Compose dependencies
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling)
     implementation("androidx.compose.foundation:foundation:1.5.4")
     implementation(libs.material)
     implementation(libs.activity.compose)
+    implementation(libs.constraintlayout)
+    implementation(libs.constraintCompose)
+
+
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")

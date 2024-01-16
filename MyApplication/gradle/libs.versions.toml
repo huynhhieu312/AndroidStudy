@@ -32,6 +32,8 @@ accompanistPermissions = "0.30.1"
 datastore = "1.0.0"
 material3 = "1.1.2"
 benchmarkMacro = "1.2.2"
+constraintlayout = "2.2.0-alpha13"
+constraintlayout-compose = "1.1.0-alpha13"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -44,6 +46,12 @@ compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = 
 ui = { group = "androidx.compose.ui", name = "ui" }
 ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+
+constraint  = { group = "androidx.constraintlayout", name = "constraint" }
+
+constraintlayout = { module = "androidx.constraintlayout:constraintlayout",  version.ref = "constraintlayout" }
+constraintCompose  = { module = "androidx.constraintlayout:constraintlayout-compose",  version.ref = "constraintlayout-compose" }
+
 ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }

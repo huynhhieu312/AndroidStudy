@@ -26,6 +26,7 @@ import com.example.myapplication.ui.theme.SmartBuyTheme
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -85,15 +86,15 @@ fun SimpleComposable( modifier: Modifier = Modifier) {
 @Composable
 fun ItemScreen() {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxHeight()) {
-        Box(
+
+        BoxDay3Screen(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.White)
+                .background(Color.Magenta)
                 .height(300.dp)
-                .weight(3f)
-        ) {
+             .weight(3f),
 
-        }
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         TextField(value = "0", onValueChange = { /*TODO*/ }, modifier = Modifier.padding(4.dp))
@@ -113,6 +114,27 @@ fun ItemScreen() {
             }
         }
     }
+}
+
+
+
+@Composable
+fun BoxDay3Screen( modifier: Modifier){
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+
+        Box(modifier = Modifier.size(200.dp).background(Color.Blue))
+        Box(modifier = Modifier.size(100.dp).background(Color.Red))
+
+        Box(modifier = Modifier.size(100.dp).background(Color.Green).align(Alignment.TopStart))
+        Box(modifier = Modifier.size(100.dp).background(Color.Green).align(Alignment.TopEnd))
+        Box(modifier = Modifier.size(100.dp).background(Color.Green).align(Alignment.BottomStart))
+        Box(modifier = Modifier.size(100.dp).background(Color.Green).align(Alignment.BottomEnd))
+
+    }
+
 }
 
 
