@@ -50,6 +50,7 @@ dependencies {
     implementation(libs.appcompat)
     implementation(libs.material3)
     implementation(libs.material)
+    implementation(libs.androidx.benchmark.macro)
 //    implementation("androidx.constraintlayout:constraintlayout:2.1.3")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

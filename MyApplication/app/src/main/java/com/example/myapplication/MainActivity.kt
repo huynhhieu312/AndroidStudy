@@ -3,13 +3,20 @@ package com.example.myapplication
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.Absolute.Center
 import androidx.compose.foundation.layout.Arrangement.Center
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+
+
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
@@ -19,7 +26,14 @@ import com.example.myapplication.ui.theme.SmartBuyTheme
 import androidx.compose.ui.unit.dp
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.Button
+import androidx.compose.material.*
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -31,10 +45,10 @@ class MainActivity : AppCompatActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-                    SimpleComposable()
+//                    SimpleComposable()
+                    ItemScreen()
                 }
             }
-
         }
 
     }
@@ -67,6 +81,42 @@ fun SimpleComposable( modifier: Modifier = Modifier) {
 
 
 }
+
+@Composable
+fun ItemScreen() {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxHeight()) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White)
+                .height(300.dp)
+                .weight(3f)
+        ) {
+
+        }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        TextField(value = "0", onValueChange = { /*TODO*/ }, modifier = Modifier.padding(4.dp))
+
+        //Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.End
+        ) {
+            Button(onClick = {}, modifier = Modifier.padding(4.dp).weight(1f)) {
+                Text("Increase")
+            }
+
+            Button(onClick = {}, modifier = Modifier.padding(4.dp).weight(1f)) {
+                Text("Decrease")
+            }
+        }
+    }
+}
+
+
+
 
 @Preview
 @Composable

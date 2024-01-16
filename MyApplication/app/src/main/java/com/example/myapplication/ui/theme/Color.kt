@@ -2,6 +2,8 @@ package com.example.myapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+
+
 val md_theme_light_primary = Color(color = 0xFF3a5ba9)
 val md_theme_light_onPrimary = Color(color = 0xFFffffff)
 val md_theme_light_primaryContainer = Color(color = 0xFFdae2ff)
@@ -30,6 +32,14 @@ val md_theme_dark_background = Color(color = 0xff1b1b1f)
 val md_theme_dark_onBackground = Color(color = 0xffe4e2e6)
 val md_theme_dark_surface = Color(color = 0xff1b1b1f)
 val md_theme_dark_onSurface = Color(color = 0xffe4e2e6)
+
+//
+
+
+val Purple200 = Color(0xFFBB86FC)
+val Purple500 = Color(0xFF6200EE)
+val Purple700 = Color(0xFF3700B3)
+val Teal200 = Color(0xFF03DAC5)
 
 
 

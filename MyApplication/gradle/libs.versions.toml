@@ -30,7 +30,8 @@ firebaseBom = "32.7.0"
 securityCrypto = "1.0.0"
 accompanistPermissions = "0.30.1"
 datastore = "1.0.0"
-material3 = "1.0.1"
+material3 = "1.1.2"
+benchmarkMacro = "1.2.2"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -78,6 +79,7 @@ datastore = { module = "androidx.datastore:datastore-preferences", version.ref =
 firestore = { module = "com.google.firebase:firebase-firestore-ktx" }
 firebaseStorage = { module = "com.google.firebase:firebase-storage" }
 coilSvg = { module = "io.coil-kt:coil-svg", version.ref = "coil" }
+androidx-benchmark-macro = { group = "androidx.benchmark", name = "benchmark-macro", version.ref = "benchmarkMacro" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
