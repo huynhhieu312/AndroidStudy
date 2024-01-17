@@ -4,17 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Arrangement.Absolute.Center
-import androidx.compose.foundation.layout.Arrangement.Center
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 
 
 import androidx.compose.runtime.Composable
@@ -24,9 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.SmartBuyTheme
 import androidx.compose.ui.unit.dp
-
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
@@ -34,6 +21,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
 import androidx.compose.material.*
+import androidx.compose.ui.layout.layoutId
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
+
 
 
 
@@ -47,7 +39,8 @@ class MainActivity : AppCompatActivity() {
                     modifier = Modifier.fillMaxSize()
                 ) {
 //                    SimpleComposable()
-                    ItemScreen()
+ //                   ItemScreen()
+                    ConstraintItemScreen()
                 }
             }
         }
@@ -137,6 +130,106 @@ fun BoxDay3Screen( modifier: Modifier){
 
 }
 
+@Composable
+fun ConstraintItemScreen() {
+    val constraints = ConstraintSet{
+        val box = createRefFor("box")
+        val input = createRefFor("input")
+        val increase = createRefFor("increase")
+        val decrease = createRefFor("decrease")
+
+        constrain(box){
+            start.linkTo(parent.start)
+            top.linkTo(parent.top)
+            end.linkTo(parent.end)
+        }
+
+
+        constrain(input){
+            top.linkTo(box.bottom)
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+        }
+
+        constrain(increase) {
+            start.linkTo(parent.start)
+            top.linkTo(input.bottom)
+            bottom.linkTo(parent.bottom)
+            width = Dimension.fillToConstraints
+            end.linkTo(decrease.start)
+        }
+
+        constrain(decrease){
+            top.linkTo(increase.top)
+            end.linkTo(parent.end)
+            bottom.linkTo(increase.bottom)
+            width = Dimension.fillToConstraints
+            start.linkTo(increase.end)
+        }
+
+    }
+    ConstraintLayout(modifier = Modifier.fillMaxHeight(), constraintSet = constraints){
+       // val (box, input, increase, decrease) = createRefs()
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.Magenta)
+                .height(500.dp)
+                .layoutId("box")
+            , contentAlignment = Alignment.Center
+        ) {
+            Box(modifier = Modifier
+                .size(200.dp)
+                .background(Color.Blue))
+            Box(modifier = Modifier
+                .size(100.dp)
+                .background(Color.Red))
+
+            Box(modifier = Modifier
+                .size(100.dp)
+                .background(Color.Green)
+                .align(Alignment.TopStart))
+            Box(modifier = Modifier
+                .size(100.dp)
+                .background(Color.Green)
+                .align(Alignment.TopEnd))
+            Box(modifier = Modifier
+                .size(100.dp)
+                .background(Color.Green)
+                .align(Alignment.BottomStart))
+            Box(modifier = Modifier
+                .size(100.dp)
+                .background(Color.Green)
+                .align(Alignment.BottomEnd))
+
+
+        }
+
+
+        TextField(value = "0", onValueChange = { /*TODO*/ },
+            modifier = Modifier.padding(4.dp)
+                .layoutId("input")
+        )
+
+
+        Button(onClick = {}, modifier = Modifier
+            .padding(4.dp)
+            .layoutId("increase")
+        ) {
+            Text("Increase")
+        }
+
+        Button(onClick = {}, modifier = Modifier
+            .padding(4.dp)
+            .layoutId("decrease")
+        ) {
+            Text("Decrease")
+        }
+
+
+    }
+}
 
 
 
