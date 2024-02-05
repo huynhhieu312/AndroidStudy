@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 
 
 import androidx.compose.runtime.Composable
@@ -20,13 +21,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
-import androidx.compose.material.*
+import androidx.compose.runtime.getValue
+
 import androidx.compose.ui.layout.layoutId
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.rotate
 
-
+import androidx.compose.ui.unit.dp
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,7 +46,8 @@ class MainActivity : AppCompatActivity() {
                 ) {
 //                    SimpleComposable()
  //                   ItemScreen()
-                    ConstraintItemScreen()
+                    val (count, onCountChange) = remember{mutableStateOf(0)}
+                    ConstraintItemScreen(count){change -> if (count + change <= 0) onCountChange(0) else onCountChange(count + change) }
                 }
             }
         }
@@ -131,7 +138,8 @@ fun BoxDay3Screen( modifier: Modifier){
 }
 
 @Composable
-fun ConstraintItemScreen() {
+fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
+    val boxSize = 400.dp
     val constraints = ConstraintSet{
         val box = createRefFor("box")
         val input = createRefFor("input")
@@ -179,48 +187,59 @@ fun ConstraintItemScreen() {
                 .layoutId("box")
             , contentAlignment = Alignment.Center
         ) {
-            Box(modifier = Modifier
-                .size(200.dp)
-                .background(Color.Blue))
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.Red))
-
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.Green)
-                .align(Alignment.TopStart))
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.Green)
-                .align(Alignment.TopEnd))
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.Green)
-                .align(Alignment.BottomStart))
-            Box(modifier = Modifier
-                .size(100.dp)
-                .background(Color.Green)
-                .align(Alignment.BottomEnd))
+            var childSize = boxSize - 20.dp
+            for(i in 0 until count){
+                Box(modifier = Modifier.size(childSize).rotate(i*3f)
+                    .background(Color.Gray).border(1.dp, Color.Black))
+                childSize -= 20.dp
+            }
+//            Box(modifier = Modifier
+//                .size(200.dp)
+//                .background(Color.Blue))
+//            Box(modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Red))
+//
+//            Box(modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Green)
+//                .align(Alignment.TopStart))
+//            Box(modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Green)
+//                .align(Alignment.TopEnd))
+//            Box(modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Green)
+//                .align(Alignment.BottomStart))
+//            Box(modifier = Modifier
+//                .size(100.dp)
+//                .background(Color.Green)
+//                .align(Alignment.BottomEnd))
 
 
         }
 
 
-        TextField(value = "0", onValueChange = { /*TODO*/ },
+        TextField(value = "${count}", onValueChange = { /*TODO*/ },
             modifier = Modifier.padding(4.dp)
                 .layoutId("input")
         )
 
 
-        Button(onClick = {}, modifier = Modifier
+        Button(onClick = {
+            onCountChange(1)
+        }, modifier = Modifier
             .padding(4.dp)
             .layoutId("increase")
         ) {
             Text("Increase")
         }
 
-        Button(onClick = {}, modifier = Modifier
+        Button(onClick = {
+
+            onCountChange(-1)
+        }, modifier = Modifier
             .padding(4.dp)
             .layoutId("decrease")
         ) {
