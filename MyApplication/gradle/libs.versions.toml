@@ -36,7 +36,7 @@ constraintlayout = "2.2.0-alpha13"
 constraintlayout-compose = "1.1.0-alpha13"
 lifecycle-viewmodel-compose = "2.7.0"
 runtime-livedata = "1.5.4"
-
+accompanist-coil = "2.5.0"
 
 
 
@@ -57,7 +57,7 @@ constraint  = { group = "androidx.constraintlayout", name = "constraint" }
 
 lifecycleViewmodelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose",  version.ref = "lifecycle-viewmodel-compose" }
 runtimeLivedataCompose  = { module = "androidx.compose.runtime:runtime-livedata",  version.ref = "runtime-livedata" }
-
+imageAccompanistCoil  = { module = "io.coil-kt:coil-compose",  version.ref = "accompanist-coil" }
 
 
 

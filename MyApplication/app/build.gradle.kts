@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.constraintCompose)
     implementation(libs.lifecycleViewmodelCompose)
     implementation(libs.runtimeLivedataCompose)
+    implementation(libs.imageAccompanistCoil)
 
 
 

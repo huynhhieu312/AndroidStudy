@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 
@@ -17,13 +18,17 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.SmartBuyTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -35,15 +40,22 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.SubcomposeAsyncImage
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -53,20 +65,37 @@ class MainActivity : AppCompatActivity() {
 
 //        setContentView(R.layout.activity_main)
         setContent{
-            SmartBuyTheme(darkTheme = false) {
-                Surface(
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val countVM : CountMainViewModel = viewModel()
-                    val count by countVM.count.observeAsState(0)
-                            //                    SimpleComposable()
-                    //                   ItemScreen()
-                   // val (count, onCountChange) = remember{mutableStateOf(0)}
-                    ConstraintItemScreen(count){newCount -> countVM.onCountChanged(newCount) }
-                }
-            }
+//            SmartBuyTheme(darkTheme = false) {
+//                Surface(
+//                    modifier = Modifier.fillMaxSize()
+//                ) {
+//                    val countVM : CountMainViewModel = viewModel()
+//                    val count by countVM.count.observeAsState(0)
+//                            //                    SimpleComposable()
+//                    //                   ItemScreen()
+//                   // val (count, onCountChange) = remember{mutableStateOf(0)}
+//                    ConstraintItemScreen(count){newCount -> countVM.onCountChanged(newCount) }
+//                }
+//            }
+ //           ComposeImages()
+            NetworkImage()
         }
 
+    }
+}
+
+@Composable
+fun NetworkImage() {
+    Column{
+
+     // CoilImage(data = "https://picsum.photos/400/400", contentDescription = "Network Image", fadeIn = true)
+        SubcomposeAsyncImage(
+            model = "https://picsum.photos/400/400",
+            loading = {
+                CircularProgressIndicator()
+            },
+            contentDescription = "Network Image"
+        )
     }
 }
 
@@ -206,7 +235,7 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Magenta)
-                .height(500.dp)
+                .height(350.dp)
                 .layoutId("box")
             , contentAlignment = Alignment.Center
         ) {
@@ -221,10 +250,11 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
         }
 
 
-        TextField(value = "${count}", onValueChange = { /*TODO*/ },
-            modifier = Modifier.padding(4.dp)
-                .layoutId("input")
-        )
+//        TextField(value = "${count}", onValueChange = { /*TODO*/ },
+//            modifier = Modifier.padding(4.dp)
+//                .layoutId("input")
+//        )
+        MyTextInput()
         TextUi("Welcome To Jetpack Compose")
 
 
@@ -250,6 +280,25 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
         }
 
 
+
+    }
+}
+
+
+
+@Composable
+fun MyTextInput() {
+    Column{
+        Text("BasicTextField")
+        var basicText by remember{mutableStateOf("")}
+        BasicTextField(value = basicText, onValueChange = {basicText = it}, Modifier.padding(8.dp))
+
+        Text("TextField")
+        var tfText by remember{mutableStateOf("")}
+        TextField(value = tfText, onValueChange = {tfText = it})
+
+        var otfText by remember{mutableStateOf("")}
+        TextField(value = otfText, onValueChange = {otfText = it}, label = {Text("Outlined")}, keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number))
     }
 }
 
@@ -270,14 +319,59 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
         Spacer(Modifier.height(16.dp))
         BasicText(text = text, modifier = Modifier.padding(4.dp), style = TextStyle.Default.copy(color = Color.Red, fontSize = 17.sp, fontFamily = customFontFamily))
         Text(text = text, modifier = Modifier.padding(4.dp), style = MaterialTheme.typography.displaySmall.copy(color = Color.Green, fontSize = 15.sp, fontStyle = FontStyle.Italic))
+        ButtonUi("Welcome to Jetpack Compose Application Development")
+    }
+}
+
+@Composable
+fun ComposeImages() {
+
+    Column (Modifier.fillMaxSize()){
+        Text("Vector Graphic")
+        Image(painter = painterResource(id = R.drawable.android), contentDescription = "Android(TM) Bot", Modifier.fillMaxWidth())
+
+        Text("Bitmap Graphic")
+        Spacer(Modifier.height(64.dp))
+        Image(painter = painterResource(id = R.drawable.flower), contentDescription = "Flower Content Description",
+            Modifier
+                .fillMaxWidth()
+                .height(400.dp)
+                .clip(CircleShape), contentScale = ContentScale.Crop)
+    }
+
+}
+
+
+@Composable
+fun ButtonUi(messageText: String) {
+    Column (Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally){
+
+        var message by remember{mutableStateOf("")}
+        Button(onClick = { message = messageText}) {
+            Text("Show Message")
+        }
+
+        Text(text = message, style = MaterialTheme.typography.titleSmall)
+
+
     }
 }
 
 
-
+//@Preview
+//@Composable
+//fun PreviewSimpleComposable() {
+//    SimpleComposable()
+//}
+@Preview
+@Composable
+fun ButtonUiPreview() {
+//    var message by remember{mutableStateOf("Welcome to Jetpack Compose Application Development")}
+    ButtonUi("Welcome to Jetpack Compose Application Development")
+}
 
 @Preview
 @Composable
-fun PreviewSimpleComposable() {
-    SimpleComposable()
+fun NetworkImagePreview() {
+    NetworkImage()
 }
