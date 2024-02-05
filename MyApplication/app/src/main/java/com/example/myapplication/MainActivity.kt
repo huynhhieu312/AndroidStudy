@@ -1,8 +1,10 @@
 package com.example.myapplication
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 
@@ -15,12 +17,14 @@ import androidx.compose.ui.unit.sp
 import com.example.myapplication.ui.theme.SmartBuyTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 
@@ -32,6 +36,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -148,6 +157,7 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
     val boxSize = 400.dp
     val constraints = ConstraintSet{
         val box = createRefFor("box")
+        val textbox = createRefFor("textbox")
         val input = createRefFor("input")
         val increase = createRefFor("increase")
         val decrease = createRefFor("decrease")
@@ -157,17 +167,24 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
             top.linkTo(parent.top)
             end.linkTo(parent.end)
         }
-
-
         constrain(input){
             top.linkTo(box.bottom)
             start.linkTo(parent.start)
             end.linkTo(parent.end)
         }
 
+        constrain(textbox){
+          start.linkTo(parent.start)
+            top.linkTo(input.bottom)
+         //  top.linkTo(parent.top)
+            end.linkTo(parent.end)
+        }
+
+
+
         constrain(increase) {
             start.linkTo(parent.start)
-            top.linkTo(input.bottom)
+            top.linkTo(textbox.bottom)
             bottom.linkTo(parent.bottom)
             width = Dimension.fillToConstraints
             end.linkTo(decrease.start)
@@ -194,36 +211,13 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
             , contentAlignment = Alignment.Center
         ) {
             var childSize = boxSize - 20.dp
-            for(i in 0 until count){
-                Box(modifier = Modifier.size(childSize).rotate(i*3f)
-                    .background(Color.Gray).border(1.dp, Color.Black))
+            for(i in 0 until count) {
+                Box(
+                    modifier = Modifier.size(childSize).rotate(i * 3f)
+                        .background(Color.Gray).border(1.dp, Color.Black)
+                )
                 childSize -= 20.dp
             }
-//            Box(modifier = Modifier
-//                .size(200.dp)
-//                .background(Color.Blue))
-//            Box(modifier = Modifier
-//                .size(100.dp)
-//                .background(Color.Red))
-//
-//            Box(modifier = Modifier
-//                .size(100.dp)
-//                .background(Color.Green)
-//                .align(Alignment.TopStart))
-//            Box(modifier = Modifier
-//                .size(100.dp)
-//                .background(Color.Green)
-//                .align(Alignment.TopEnd))
-//            Box(modifier = Modifier
-//                .size(100.dp)
-//                .background(Color.Green)
-//                .align(Alignment.BottomStart))
-//            Box(modifier = Modifier
-//                .size(100.dp)
-//                .background(Color.Green)
-//                .align(Alignment.BottomEnd))
-
-
         }
 
 
@@ -231,6 +225,9 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
             modifier = Modifier.padding(4.dp)
                 .layoutId("input")
         )
+        TextUi("Welcome To Jetpack Compose")
+
+
 
 
         Button(onClick = {
@@ -255,6 +252,27 @@ fun ConstraintItemScreen(count: Int, onCountChange: (Int) -> Unit){
 
     }
 }
+
+
+@Composable
+ fun TextUi(text: String) {
+    Box(
+        modifier = Modifier
+        .fillMaxWidth()
+            .background(Color.Blue)
+            .height(150.dp)
+            .layoutId("textbox")
+        , contentAlignment = Alignment.Center
+    ) {
+        //val customFont = Font(R.font.chango)
+        val customFontFamily = FontFamily.Serif
+        BasicText(text = "Welcome", style = TextStyle.Default.copy(color = Color.DarkGray, fontSize = 17.sp, fontFamily = customFontFamily))
+        Spacer(Modifier.height(16.dp))
+        BasicText(text = text, modifier = Modifier.padding(4.dp), style = TextStyle.Default.copy(color = Color.Red, fontSize = 17.sp, fontFamily = customFontFamily))
+        Text(text = text, modifier = Modifier.padding(4.dp), style = MaterialTheme.typography.displaySmall.copy(color = Color.Green, fontSize = 15.sp, fontStyle = FontStyle.Italic))
+    }
+}
+
 
 
 
