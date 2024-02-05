@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 
 import androidx.compose.ui.layout.layoutId
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,21 +34,26 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.rotate
 
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
 //        setContentView(R.layout.activity_main)
         setContent{
             SmartBuyTheme(darkTheme = false) {
                 Surface(
                     modifier = Modifier.fillMaxSize()
                 ) {
-//                    SimpleComposable()
- //                   ItemScreen()
-                    val (count, onCountChange) = remember{mutableStateOf(0)}
-                    ConstraintItemScreen(count){change -> if (count + change <= 0) onCountChange(0) else onCountChange(count + change) }
+                    val countVM : CountMainViewModel = viewModel()
+                    val count by countVM.count.observeAsState(0)
+                            //                    SimpleComposable()
+                    //                   ItemScreen()
+                   // val (count, onCountChange) = remember{mutableStateOf(0)}
+                    ConstraintItemScreen(count){newCount -> countVM.onCountChanged(newCount) }
                 }
             }
         }

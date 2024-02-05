@@ -63,10 +63,14 @@ dependencies {
     implementation(libs.activity.compose)
     implementation(libs.constraintlayout)
     implementation(libs.constraintCompose)
+    implementation(libs.lifecycleViewmodelCompose)
+    implementation(libs.runtimeLivedataCompose)
 
 
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+//    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+//    implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
     implementation("androidx.compose.runtime:runtime-rxjava2:1.5.4")
 }
