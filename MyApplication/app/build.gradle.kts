@@ -1,3 +1,5 @@
+
+
 @Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.androidApplication)
@@ -34,14 +36,20 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
+
+       // useIR = true
+     //   freeCompilerArgs ["-Xopt-in=kotlin.RequiresOptIn"]
     }
     buildFeatures {
         compose = true
     }
 
     composeOptions{
+       //kotlinCompilerExtensionVersion '1.0.0-rc01'
         kotlinCompilerExtensionVersion = "1.5.7"
+
     }
+
 }
 
 dependencies {

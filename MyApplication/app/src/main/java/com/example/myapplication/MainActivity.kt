@@ -5,6 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.core.MutableTransitionState
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,6 +33,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.getValue
@@ -42,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -55,7 +62,21 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.SubcomposeAsyncImage
+import com.example.myapplication.ui.theme.AnimatedVisibilityMotionTheme
 
+import androidx.compose.animation.*
+
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntSize
+import com.example.myapplication.ui.theme.SwapContentMotionTheme
 
 
 class MainActivity : AppCompatActivity() {
@@ -78,7 +99,15 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
  //           ComposeImages()
-            NetworkImage()
+//            AnimatedVisibilityMotionTheme {
+//                AnimatedVisibilitySample()
+//            }
+
+            SwapContentMotionTheme {
+               // AnimatedVisibilitySample()
+                AnimationDemo()
+            }
+           // NetworkImage()
         }
 
     }
@@ -374,4 +403,312 @@ fun ButtonUiPreview() {
 @Composable
 fun NetworkImagePreview() {
     NetworkImage()
+}
+
+
+
+@OptIn(ExperimentalAnimationApi::class)
+@Preview
+@Composable
+fun AnimatedVisibilitySample() {
+    val (checked, onCheckedChange) = remember{mutableStateOf(false)}
+
+
+    val show = remember{
+        MutableTransitionState(false).apply{
+            targetState = true
+        }
+    }
+    Column (
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .shadow(2.dp)){
+        Row(Modifier.padding(16.dp)) {
+            Checkbox(checked, onCheckedChange, enabled = checked)
+            Text("Show Content")
+        }
+
+        AnimatedVisibility(visibleState = show,
+            enter = fadeIn() + slideInHorizontally(initialOffsetX = {-it},
+                animationSpec = spring(dampingRatio = Spring.DampingRatioHighBouncy, visibilityThreshold = IntOffset(200, 100))),
+            exit = shrinkOut(shrinkTowards = Alignment.BottomStart,
+                animationSpec = tween(1000))) {
+            Box(
+                Modifier
+                    .size(400.dp)
+                    .padding(16.dp),
+                contentAlignment = Alignment.BottomCenter
+            ){
+                Image(painterResource(id = R.drawable.flower), "Profile", modifier = Modifier.clip(
+                    RoundedCornerShape(8.dp)
+                )
+                    .fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+                Text("Jetpack Compose is awesome", fontSize = 30.sp, fontWeight = FontWeight.Bold, color = Color.White,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                        .animateEnterExit(enter = slideInVertically(initialOffsetY = {2*it},
+                            animationSpec = tween(1000)
+                        ))
+                )
+            }
+        }
+    }
+}
+
+
+enum class Picture { Man, Woman, Daughter, Son, All }
+
+/**
+ * Composable to show Crossfade and AnimatedContent animations
+ */
+@OptIn(ExperimentalAnimationApi::class)
+@Preview
+@Composable
+fun AnimationDemo() {
+    /**
+     * Count to keep track of the horizontal sliding counter
+     */
+    var count by remember { mutableStateOf(0) }
+
+    /**
+     * Flag to expand or shrink the text content
+     */
+    var expand by remember { mutableStateOf(false) }
+
+    /**
+     * Enum variable to select a picture to crossfade to
+     */
+    var pick by remember { mutableStateOf(Picture.Man) }
+
+
+    Column(
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+            .shadow(2.dp)
+    ) {
+        Column (
+            Modifier
+                .fillMaxHeight(0.4f)
+                .padding(8.dp)
+        ){
+            Text(stringResource(id = R.string.animated_content_sample_1), Modifier.padding(8.dp))
+            Divider()
+
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(8.dp)
+                    .background(Color.Yellow)
+                ,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+
+                IconButton(onClick = { if(count > 0) count-- },
+                    modifier = Modifier
+                        .weight(1f)) {
+                    Icon(
+                        painterResource(id = R.drawable.left_arrow), null, Modifier
+                            .size(100.dp)
+                    )
+                }
+
+                //Add AnimatedContent here around Box
+                AnimatedContent(targetState = count,
+                    transitionSpec = {
+                        if(targetState > initialState) {
+                            val contentTransform =
+                                slideInHorizontally(animationSpec = tween(durationMillis = 200) { width -> -width }) + fadeIn() with slideOutHorizontally(animationSpec = tween(durationMillis = 200)
+                                    { width -> width }) + fadeOut() using
+                                        SizeTransform { initialSize, targetSize ->
+                                            keyframes {
+                                                durationMillis = 300
+                                                IntSize(
+                                                    initialSize.width / 2,
+                                                    targetSize.height / 2
+                                                ) at 150
+                                            }
+                                        }
+                            contentTransform
+                        }
+                        else {
+                            val contentTransform: ContentTransform =
+                                (slideInHorizontally(animationSpec = tween(durationMillis = 200){ width -> width }) + fadeIn()) with (slideOutHorizontally(animationSpec = tween(durationMillis = 200)
+                                    { width -> -width }) + fadeOut())
+                            contentTransform
+                        }
+                    }, label = ""
+                ){ targetCount ->
+                    // Make sure to use `targetCount`, not `count`.
+                    //Text(text = "Count: $targetCount")
+                    Box(
+                        Modifier
+                            .weight(1f)
+                            .fillMaxHeight()
+                            .width(100.dp), contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "$targetCount",
+                            fontSize = 50.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Red,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+
+
+                IconButton(onClick = { count++ },
+                    modifier = Modifier
+                        .weight(1f)) {
+                    Icon(
+                        painterResource(id = R.drawable.right_arrow), null, Modifier
+                            .size(100.dp)
+                    )
+                }
+
+            }
+        }
+
+
+        Column(
+            Modifier
+                .fillMaxHeight(0.3f)
+                .fillMaxWidth()
+                .padding(8.dp)
+        ) {
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    stringResource(id = R.string.animated_content_sample_2),
+                    Modifier.padding(8.dp),
+                )
+                Text(stringResource(id = R.string.expand), Modifier.padding(8.dp))
+                Checkbox(checked = expand, onCheckedChange = { expand = !expand })
+            }
+            Divider()
+//            AnimatedContent(targetState = expand,
+//                transitionSpec = {
+//                    slideIntoContainer(towards = AnimatedContentScope.SlideDirection.Up, animationSpec =
+//                    spring(Spring.DampingRatioHighBouncy)) + fadeIn() with slideOutOfContainer(
+//                        AnimatedContentScope.SlideDirection.Up) + fadeOut() using
+//                            SizeTransform { initialSize, targetSize ->
+//                                keyframes {
+//                                    durationMillis = 300
+//                                    IntSize(initialSize.width, targetSize.height) at 150
+//                                }
+//                            }
+//                }) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .background(Color.LightGray)
+//                ) {
+//                    if (!expand) {
+//                        Box(
+//                            Modifier
+//                                .wrapContentSize()
+//
+//                        ) {
+//                            Text("short text", Modifier.padding(8.dp))
+//                        }
+//                    } else {
+//                        Box(
+//                            Modifier
+//                                .wrapContentHeight()
+//                                .fillMaxWidth()
+//                        ) {
+//                            Text(
+//                                "Long text\nLong text line\nLong text line 3",
+//                                Modifier.padding(8.dp)
+//                            )
+//                        }
+//                    }
+//                }
+//            }
+
+        }
+
+//        Column(
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .fillMaxWidth()
+//                .padding(8.dp)
+//
+//        ) {
+//
+//            Text(stringResource(id = R.string.crossfade_animation_sample), Modifier.padding(8.dp),
+//                style = MaterialTheme.typography.h6)
+//            Divider()
+//
+//
+//            val targetState = pick
+//
+//            Crossfade(targetState = pick,
+//                animationSpec = tween(durationMillis = 1000,
+//                    easing = LinearEasing)) {picture ->
+//                Box(
+//                    Modifier
+//                        .fillMaxSize()
+//                        .clickable {
+//                            val items = Picture.values()
+//                            val nextItem =
+//                                if (picture.ordinal < items.size - 1) items[picture.ordinal + 1] else items[0]
+//                            pick = nextItem
+//                        }) {
+//                    Text(
+//                        targetState.name,
+//                        Modifier
+//                            .align(Alignment.TopEnd)
+//                            .padding(8.dp),
+//                        fontSize = 30.sp, fontWeight = FontWeight.Bold
+//                    )
+//                    when (targetState) {
+//                        Picture.Man -> {
+//                            Image(painterResource(id = R.drawable.professor), null)
+//                        }
+//
+//                        Picture.Woman -> {
+//                            Image(painterResource(id = R.drawable.woman), null)
+//
+//                        }
+//
+//                        Picture.Daughter -> {
+//                            Image(painterResource(id = R.drawable.daughter), null)
+//                        }
+//
+//                        Picture.Son -> {
+//                            Image(painterResource(id = R.drawable.son), null)
+//                        }
+//
+//                        Picture.All -> {
+//                            Row(Modifier.fillMaxSize()) {
+//                                val pics = listOf(
+//                                    R.drawable.professor, R.drawable.woman,
+//                                    R.drawable.daughter, R.drawable.son
+//                                )
+//                                for (pic in pics)
+//                                    Image(
+//                                        painterResource(id = pic),
+//                                        null,
+//                                        Modifier
+//                                            .weight(1f)
+//                                            .align(Alignment.Bottom)
+//                                            .graphicsLayer {
+//                                                if (pic == R.drawable.professor) rotationY = 180f
+//                                            }
+//                                    )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
+
+    }
 }
